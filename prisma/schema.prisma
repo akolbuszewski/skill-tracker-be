@@ -4,10 +4,89 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  sessions     Session[]
+  workouts     Workout[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Session {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  workoutId   String?
+  workout     Workout? @relation(fields: [workoutId], references: [id])
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  tasks       Task[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Task {
+  id              String   @id @default(uuid())
+  name            String
+  description     String?
+  durationSeconds Int
+  exerciseId      String
+  exercise        Exercise @relation(fields: [exerciseId], references: [id])
+  sessionId       String
+  session         Session  @relation(fields: [sessionId], references: [id])
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Workout {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  exercises   Exercise[]
+  sessions    Session[]
+  userId      String
+  user        User       @relation(fields: [userId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Exercise {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  timebox     Int
+  resources   Resource[]
+  tasks       Task[]
+  workouts    Workout[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+enum ResourceType {
+  LINK
+  DOCUMENT
+  VIDEO
+  AUDIOFILE
+}
+
+model Resource {
+  id         String       @id @default(uuid())
+  type       ResourceType
+  title      String?
+  url        String
+  exerciseId String
+  exercise   Exercise     @relation(fields: [exerciseId], references: [id])
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
