@@ -36,40 +36,64 @@ model Session {
 }
 
 model Task {
-  id              String   @id @default(uuid())
-  name            String
-  description     String?
-  durationSeconds Int
-  exerciseId      String
-  exercise        Exercise @relation(fields: [exerciseId], references: [id])
-  sessionId       String
-  session         Session  @relation(fields: [sessionId], references: [id])
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                     String     @id @default(uuid())
+  name                   String
+  description            String?
+  plannedDurationSeconds Int
+  actualDurationSeconds  Int?
+  status                 TaskStatus @default(PENDING)
+  notes                  String?
+  order                  Int
+  exerciseId             String
+  exercise               Exercise   @relation(fields: [exerciseId], references: [id])
+  sessionId              String
+  session                Session    @relation(fields: [sessionId], references: [id])
+  createdAt              DateTime   @default(now())
+  updatedAt              DateTime   @updatedAt
 }
 
 model Workout {
-  id          String     @id @default(uuid())
+  id          String        @id @default(uuid())
   name        String
   description String?
-  exercises   Exercise[]
+  steps       WorkoutStep[]
   sessions    Session[]
   userId      String
-  user        User       @relation(fields: [userId], references: [id])
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  user        User          @relation(fields: [userId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }
 
 model Exercise {
-  id          String     @id @default(uuid())
-  name        String
-  description String
-  timebox     Int
-  resources   Resource[]
-  tasks       Task[]
-  workouts    Workout[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id             String        @id @default(uuid())
+  name           String
+  description    String
+  timeboxSeconds Int
+  resources      Resource[]
+  tasks          Task[]
+  workoutSteps   WorkoutStep[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+enum TaskStatus {
+  PENDING
+  DONE
+  SKIPPED
+}
+
+model WorkoutStep {
+  id                     String   @id @default(uuid())
+  workoutId              String
+  workout                Workout  @relation(fields: [workoutId], references: [id])
+  exerciseId             String
+  exercise               Exercise @relation(fields: [exerciseId], references: [id])
+  order                  Int
+  plannedDurationSeconds Int?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@unique([workoutId, order])
 }
 
 enum ResourceType {
