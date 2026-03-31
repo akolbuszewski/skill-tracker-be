@@ -15,6 +15,7 @@ model User {
   id           String    @id @default(uuid())
   email        String    @unique
   passwordHash String
+  displayName  String?
   sessions     Session[]
   workouts     Workout[]
   createdAt    DateTime  @default(now())
