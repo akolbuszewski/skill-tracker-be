@@ -3,12 +3,13 @@ import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { PrismaService } from 'src/common/database/prisma.service';
 import { workoutSelect } from './workout.select';
+import type { UserId } from 'src/common/types/ids';
 
 @Injectable()
 export class WorkoutService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(userId: string, createWorkoutDto: CreateWorkoutDto) {
+  async create(userId: UserId, createWorkoutDto: CreateWorkoutDto) {
     return await this.prisma.workout.create({
       data: {
         ...createWorkoutDto,
@@ -21,7 +22,7 @@ export class WorkoutService {
     })
   }
 
-  async findAll(userId: string) {
+  async findAll(userId: UserId) {
     return await this.prisma.workout.findMany({
       where: {
         userId,
@@ -30,7 +31,7 @@ export class WorkoutService {
     });
   }
 
-  async findOne(id: string, userId: string) {
+  async findOne(userId: UserId, id: string) {
     return await this.prisma.workout.findFirst({
       where: {
         id,
@@ -40,7 +41,7 @@ export class WorkoutService {
     });
   }
 
-  async update(userId: string, id: string, createWorkoutDto: UpdateWorkoutDto) {
+  async update(userId: UserId, id: string, createWorkoutDto: UpdateWorkoutDto) {
     return await this.prisma.workout.update({
       where: {
         userId,
@@ -56,7 +57,7 @@ export class WorkoutService {
     })
   }
 
-  async remove(userId: string, id: string) {
+  async remove(userId: UserId, id: string) {
     return await this.prisma.workout.delete({
       where: {
         id,

@@ -4,6 +4,8 @@ import { CreateExcerciseDto } from './dto/create-excercise.dto';
 import { UpdateExcerciseDto } from './dto/update-excercise.dto';
 import { AuthGuard } from '../auth.guard';
 import type { AuthedRequest } from 'src/common/types/auth';
+import type { UserId } from 'src/common/types/ids';
+import { ParseUserIdPipe } from 'src/common/pipes/parseUserId.pipe';
 
 @Controller('excercises')
 export class ExcercisesController {
@@ -51,7 +53,7 @@ export class ExcercisesController {
   }
 
   @Get('public/users/:userId')
-  findAllPublicForUser(@Param('userId') userId: string) {
+  findAllPublicForUser(@Param('userId', ParseUserIdPipe) userId: UserId) {
     return this.excercisesService.findAllPublicForUser(userId);
   }
 

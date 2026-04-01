@@ -1,4 +1,6 @@
-import { Request } from "express";
-export type JwtPayload = { sub: string; email: string }
+import { Request } from 'express';
+import type { UserId } from './ids';
 
-export type AuthedRequest = Request & { user: JwtPayload }
+export type JwtPayload = { sub: UserId; email: string };
+
+export type AuthedRequest = Request & { user: JwtPayload };
