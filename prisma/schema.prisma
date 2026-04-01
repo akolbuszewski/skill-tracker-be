@@ -12,14 +12,15 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
-  email        String    @unique
+  id           String     @id @default(uuid())
+  email        String     @unique
   passwordHash String
   displayName  String?
   sessions     Session[]
   workouts     Workout[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  exercises    Exercise[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 model Session {
@@ -65,15 +66,18 @@ model Workout {
 }
 
 model Exercise {
-  id             String        @id @default(uuid())
-  name           String
-  description    String
-  timeboxSeconds Int
-  resources      Resource[]
-  tasks          Task[]
-  workoutSteps   WorkoutStep[]
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id                  String        @id @default(uuid())
+  name                String
+  description         String
+  descriptionRichText Json?
+  timeboxSeconds      Int
+  userId              String
+  user                User          @relation(fields: [userId], references: [id])
+  resources           Resource[]
+  tasks               Task[]
+  workoutSteps        WorkoutStep[]
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
 }
 
 enum TaskStatus {
@@ -100,6 +104,7 @@ enum ResourceType {
   LINK
   DOCUMENT
   VIDEO
+  IMAGE
   AUDIOFILE
 }
 
