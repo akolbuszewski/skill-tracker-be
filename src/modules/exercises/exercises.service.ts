@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import { CreateExcerciseDto } from './dto/create-excercise.dto';
-import { UpdateExcerciseDto } from './dto/update-excercise.dto';
+import { CreateExerciseDto } from './dto/create-exercise.dto';
+import { UpdateExerciseDto } from './dto/update-exercise.dto';
 import { PrismaService } from 'src/common/database/prisma.service';
-import { excerciseSelect } from './excercise.select';
+import { exerciseSelect } from './exercise.select';
 import type { UserId } from 'src/common/types/ids';
 
 @Injectable()
-export class ExcercisesService {
+export class ExercisesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(userId: UserId, dto: CreateExcerciseDto) {
+  async create(userId: UserId, dto: CreateExerciseDto) {
     return await this.prisma.exercise.create({
       data: {
         userId,
@@ -27,7 +27,7 @@ export class ExcercisesService {
             }
           : undefined,
       },
-      select: excerciseSelect,
+      select: exerciseSelect,
     });
   }
 
@@ -36,7 +36,7 @@ export class ExcercisesService {
       where: {
         userId,
       },
-      select: excerciseSelect,
+      select: exerciseSelect,
     });
   }
 
@@ -46,13 +46,13 @@ export class ExcercisesService {
         id,
         userId,
       },
-      select: excerciseSelect,
+      select: exerciseSelect,
     });
   }
 
   async findAllPublic() {
     return await this.prisma.exercise.findMany({
-      select: excerciseSelect,
+      select: exerciseSelect,
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -60,7 +60,7 @@ export class ExcercisesService {
   async findAllPublicForUser(userId: UserId) {
     return await this.prisma.exercise.findMany({
       where: { userId },
-      select: excerciseSelect,
+      select: exerciseSelect,
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -68,24 +68,24 @@ export class ExcercisesService {
   async findOnePublic(id: string) {
     return await this.prisma.exercise.findFirst({
       where: { id },
-      select: excerciseSelect,
+      select: exerciseSelect,
     });
   }
 
-  async update(id: string, updateExcerciseDto: UpdateExcerciseDto) {
+  async update(id: string, dto: UpdateExerciseDto) {
     return await this.prisma.exercise.update({
       where: {
         id,
       },
       data: {
-        name: updateExcerciseDto.name,
-        description: updateExcerciseDto.description,
-        timeboxSeconds: updateExcerciseDto.timeboxSeconds,
-        descriptionRichText: updateExcerciseDto.descriptionRichText,
-        resources: updateExcerciseDto.resources?.length
+        name: dto.name,
+        description: dto.description,
+        timeboxSeconds: dto.timeboxSeconds,
+        descriptionRichText: dto.descriptionRichText,
+        resources: dto.resources?.length
           ? {
               deleteMany: {},
-              create: updateExcerciseDto.resources.map((r) => ({
+              create: dto.resources.map((r) => ({
                 type: r.type,
                 title: r.title,
                 url: r.url,
@@ -93,7 +93,7 @@ export class ExcercisesService {
             }
           : undefined,
       },
-      select: excerciseSelect,
+      select: exerciseSelect,
     });
   }
 

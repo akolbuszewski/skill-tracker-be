@@ -15,4 +15,3 @@ export class CreateResourceDto {
   @MaxLength(2048)
   url!: string;
 }
-

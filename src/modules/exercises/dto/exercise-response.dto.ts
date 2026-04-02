@@ -7,7 +7,7 @@ export type ResourceResponseDto = {
   updatedAt: Date;
 };
 
-export type ExcerciseResponseDto = {
+export type ExerciseResponseDto = {
   id: string;
   userId: string;
   name: string;
@@ -18,4 +18,3 @@ export type ExcerciseResponseDto = {
   createdAt: Date;
   updatedAt: Date;
 };
-

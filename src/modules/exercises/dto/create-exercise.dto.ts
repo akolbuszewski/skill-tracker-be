@@ -3,7 +3,7 @@ import { IsInt, IsObject, IsOptional, IsString, MaxLength, Min, MinLength, Valid
 import { CreateResourceDto } from './create-resource.dto';
 import type { JsonInput } from 'src/common/types/json';
 
-export class CreateExcerciseDto {
+export class CreateExerciseDto {
   @IsString()
   @MinLength(1)
   @MaxLength(200)

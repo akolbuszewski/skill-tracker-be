@@ -1,20 +1,20 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
-import { ExcercisesService } from './excercises.service';
-import { CreateExcerciseDto } from './dto/create-excercise.dto';
-import { UpdateExcerciseDto } from './dto/update-excercise.dto';
+import { ExercisesService } from './exercises.service';
+import { CreateExerciseDto } from './dto/create-exercise.dto';
+import { UpdateExerciseDto } from './dto/update-exercise.dto';
 import { AuthGuard } from '../auth.guard';
 import type { AuthedRequest } from 'src/common/types/auth';
 import type { UserId } from 'src/common/types/ids';
 import { ParseUserIdPipe } from 'src/common/pipes/parseUserId.pipe';
 
-@Controller('excercises')
-export class ExcercisesController {
-  constructor(private readonly excercisesService: ExcercisesService) {}
+@Controller('exercises')
+export class ExercisesController {
+  constructor(private readonly exercisesService: ExercisesService) {}
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Req() req: AuthedRequest, @Body() createExcerciseDto: CreateExcerciseDto) {
-    return this.excercisesService.create(req.user.sub, createExcerciseDto);
+  create(@Req() req: AuthedRequest, @Body() createExerciseDto: CreateExerciseDto) {
+    return this.exercisesService.create(req.user.sub, createExerciseDto);
   }
 
   // --------
@@ -23,25 +23,25 @@ export class ExcercisesController {
   @UseGuards(AuthGuard)
   @Get()
   findAllForUser(@Req() req: AuthedRequest) {
-    return this.excercisesService.findAll(req.user.sub);
+    return this.exercisesService.findAll(req.user.sub);
   }
 
   @UseGuards(AuthGuard)
   @Get('me/:id')
   findOneForUser(@Req() req: AuthedRequest, @Param('id') id: string) {
-    return this.excercisesService.findOneForUser(req.user.sub, id);
+    return this.exercisesService.findOneForUser(req.user.sub, id);
   }
 
   @UseGuards(AuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExcerciseDto: UpdateExcerciseDto) {
-    return this.excercisesService.update(id, updateExcerciseDto);
+  update(@Param('id') id: string, @Body() updateExerciseDto: UpdateExerciseDto) {
+    return this.exercisesService.update(id, updateExerciseDto);
   }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Req() req: AuthedRequest, @Param('id') id: string) {
-    return this.excercisesService.remove(id, req.user.sub);
+    return this.exercisesService.remove(id, req.user.sub);
   }
 
   // --------
@@ -49,16 +49,16 @@ export class ExcercisesController {
   // --------
   @Get('public')
   findAllPublic() {
-    return this.excercisesService.findAllPublic();
+    return this.exercisesService.findAllPublic();
   }
 
   @Get('public/users/:userId')
   findAllPublicForUser(@Param('userId', ParseUserIdPipe) userId: UserId) {
-    return this.excercisesService.findAllPublicForUser(userId);
+    return this.exercisesService.findAllPublicForUser(userId);
   }
 
   @Get('public/:id')
   findOnePublic(@Param('id') id: string) {
-    return this.excercisesService.findOnePublic(id);
+    return this.exercisesService.findOnePublic(id);
   }
 }

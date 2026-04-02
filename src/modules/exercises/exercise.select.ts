@@ -1,8 +1,8 @@
 import { Prisma } from '@prisma/client';
 import type { SelectForDto } from 'src/common/utils/select-for-dto';
-import type { ExcerciseResponseDto } from './dto/excercise-response.dto';
+import type { ExerciseResponseDto } from './dto/exercise-response.dto';
 
-export const excerciseSelect = {
+export const exerciseSelect = {
   id: true,
   userId: true,
   name: true,
@@ -21,9 +21,8 @@ export const excerciseSelect = {
   },
   createdAt: true,
   updatedAt: true,
-} as const satisfies Prisma.ExerciseSelect & SelectForDto<ExcerciseResponseDto>;
+} as const satisfies Prisma.ExerciseSelect & SelectForDto<ExerciseResponseDto>;
 
-export type ExcerciseResponse = Prisma.ExerciseGetPayload<{
-  select: typeof excerciseSelect;
+export type ExerciseResponse = Prisma.ExerciseGetPayload<{
+  select: typeof exerciseSelect;
 }>;
-

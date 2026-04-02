@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Put } from '@nestjs/common';
 import { WorkoutService } from './workout.service';
 import { CreateWorkoutDto } from './dto/create-workout.dto';
 import { UpdateWorkoutDto } from './dto/update-workout.dto';
 import { AuthGuard } from '../auth.guard';
 import type { AuthedRequest } from 'src/common/types/auth';
+import { CreateWorkoutStepDto } from './dto/create-workout-step.dto';
 
 @Controller('workout')
 export class WorkoutController {
@@ -38,4 +39,11 @@ export class WorkoutController {
   remove(@Req() req: AuthedRequest, @Param('id') id: string) {
     return this.workoutService.remove(req.user.sub, id);
   }
+
+  @UseGuards(AuthGuard)
+  @Put(':id/steps')
+  addSteps(@Req() req: AuthedRequest, @Param('id') id, @Body() workoutStepDto: CreateWorkoutStepDto[]) {
+    return this.workoutService.replaceWorkoutSteps(req.user.sub, id, workoutStepDto)
+  }
+
 }
