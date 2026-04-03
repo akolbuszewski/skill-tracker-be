@@ -30,7 +30,7 @@ describe('AuthController', () => {
 
   it('register', async () => {
     const dto = { email: 'email@test.com', password: 'password12' };
-    const result = { email: 'test@siema.pl', id: 'test', createdAt: '2020-11-11' };
+    const result = { email: 'test@siema.pl', id: 'test', createdAt: new Date('2020-11-11') };
     authService.register.mockResolvedValue(result);
 
     expect(await controller.register(dto)).toEqual(result);

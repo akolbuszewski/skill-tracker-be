@@ -1,25 +1,27 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PrismaService } from 'src/common/database/prisma.service';
 import { AuthGuard } from '../auth.guard';
-import { WorkoutController } from './workout.controller';
-import { WorkoutService } from './workout.service';
+import { WorkoutService } from '../workout/workout.service';
+import { SessionsController } from './sessions.controller';
+import { SessionsService } from './sessions.service';
 
-describe('WorkoutController', () => {
-  let controller: WorkoutController;
+describe('SessionsController', () => {
+  let controller: SessionsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [WorkoutController],
+      controllers: [SessionsController],
       providers: [
-        WorkoutService,
+        SessionsService,
         { provide: PrismaService, useValue: {} },
+        { provide: WorkoutService, useValue: {} },
       ],
     })
       .overrideGuard(AuthGuard)
       .useValue({ canActivate: () => true })
       .compile();
 
-    controller = module.get<WorkoutController>(WorkoutController);
+    controller = module.get<SessionsController>(SessionsController);
   });
 
   it('should be defined', () => {

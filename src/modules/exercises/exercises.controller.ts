@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Req, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ExercisesService } from './exercises.service';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
@@ -7,10 +8,12 @@ import type { AuthedRequest } from 'src/common/types/auth';
 import type { UserId } from 'src/common/types/ids';
 import { ParseUserIdPipe } from 'src/common/pipes/parseUserId.pipe';
 
+@ApiTags('exercises')
 @Controller('exercises')
 export class ExercisesController {
   constructor(private readonly exercisesService: ExercisesService) {}
 
+  @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
   @Post()
   create(@Req() req: AuthedRequest, @Body() createExerciseDto: CreateExerciseDto) {
@@ -20,24 +23,28 @@ export class ExercisesController {
   // --------
   // "Me" (owner-scoped)
   // --------
+  @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
   @Get()
   findAllForUser(@Req() req: AuthedRequest) {
     return this.exercisesService.findAll(req.user.sub);
   }
 
+  @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
   @Get('me/:id')
   findOneForUser(@Req() req: AuthedRequest, @Param('id') id: string) {
     return this.exercisesService.findOneForUser(req.user.sub, id);
   }
 
+  @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateExerciseDto: UpdateExerciseDto) {
     return this.exercisesService.update(id, updateExerciseDto);
   }
 
+  @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
   @Delete(':id')
   remove(@Req() req: AuthedRequest, @Param('id') id: string) {

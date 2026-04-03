@@ -28,6 +28,7 @@ model Session {
   name        String
   description String?
   workoutId   String?
+  status      SessionStatus @default(INITIATED)
   workout     Workout? @relation(fields: [workoutId], references: [id])
   userId      String
   user        User     @relation(fields: [userId], references: [id])
@@ -80,8 +81,17 @@ model Exercise {
   updatedAt           DateTime      @updatedAt
 }
 
+enum SessionStatus {
+  INITIATED
+  IN_PROGRESS
+  DONE
+  USER_BREAK
+  CANCELLED
+}
+
 enum TaskStatus {
   PENDING
+  IN_PROGRESS
   DONE
   SKIPPED
 }

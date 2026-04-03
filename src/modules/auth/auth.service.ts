@@ -1,13 +1,14 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
-import argon2 from 'argon2';
-import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/common/database/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { Prisma } from '@prisma/client';
+import argon2 from 'argon2';
+import { PrismaService } from 'src/common/database/prisma.service';
+import type { AuthLoginResult, AuthRegisterResult } from './auth.types';
 
 @Injectable()
 export class AuthService {
     constructor(private readonly prisma: PrismaService, private readonly jwtService: JwtService) {}
-    async register(email: string, password: string) {
+    async register(email: string, password: string): Promise<AuthRegisterResult> {
         const passwordHash = await argon2.hash(password)
         try {
         return await this.prisma.user.create({
@@ -31,7 +32,7 @@ export class AuthService {
     }
     }
 
-    async login(userEmail: string, password: string) {
+    async login(userEmail: string, password: string): Promise<AuthLoginResult> {
         try {
         const user  = await this.prisma.user.findUnique({
             where: {
