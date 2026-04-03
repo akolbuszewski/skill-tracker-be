@@ -41,8 +41,11 @@ generate-host:
 
 generate-all: generate generate-host
 
-migrate:
+create-migration:
 	docker compose exec api npm run db:migrate -- --name $(NAME)
+
+migrate:
+	docker compose exec api npm run db:migrate:deploy
 
 reset:
 	docker compose exec api npm run db:reset

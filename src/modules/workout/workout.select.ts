@@ -1,5 +1,7 @@
 import { Prisma } from '@prisma/client';
+import type { SelectForDto } from 'src/common/utils/select-for-dto';
 import { exerciseSelect } from 'src/modules/exercises/exercise.select';
+import type { WorkoutSummaryDto } from './dto/workout-response.dto';
 
 /** Step row without joining Exercise (smaller payloads for lists). */
 export const workoutStepSelectSummary = {
@@ -19,7 +21,7 @@ export const workoutSelectSummary = {
   steps: { select: workoutStepSelectSummary },
   createdAt: true,
   updatedAt: true,
-} as const satisfies Prisma.WorkoutSelect;
+} as const satisfies Prisma.WorkoutSelect & SelectForDto<WorkoutSummaryDto>;
 
 /** Full workout with nested exercises (and resources) on each step — use for detail & writes. */
 export const workoutSelect = {

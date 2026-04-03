@@ -22,6 +22,17 @@ import type { AuthedRequest } from 'src/common/types/auth';
 import type { UserId } from 'src/common/types/ids';
 import { ParseUserIdPipe } from 'src/common/pipes/parseUserId.pipe';
 import { CreateWorkoutStepDto } from './dto/create-workout-step.dto';
+import {
+  OpenApiWorkoutCreate,
+  OpenApiWorkoutGetOne,
+  OpenApiWorkoutListMine,
+  OpenApiWorkoutPublicGetOne,
+  OpenApiWorkoutPublicList,
+  OpenApiWorkoutPublicListForUser,
+  OpenApiWorkoutRemove,
+  OpenApiWorkoutReplaceSteps,
+  OpenApiWorkoutUpdate,
+} from './workout.openapi';
 
 @ApiTags('workout')
 @Controller('workout')
@@ -30,6 +41,7 @@ export class WorkoutController {
 
   @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
+  @OpenApiWorkoutCreate()
   @Post()
   create(@Req() req: AuthedRequest, @Body() createWorkoutDto: CreateWorkoutDto) {
     return this.workoutService.create(req.user.sub, createWorkoutDto);
@@ -37,6 +49,7 @@ export class WorkoutController {
 
   @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
+  @OpenApiWorkoutListMine()
   @Get()
   findAll(
     @Req() req: AuthedRequest,
@@ -48,6 +61,7 @@ export class WorkoutController {
   // --------
   // Public browse (read-only)
   // --------
+  @OpenApiWorkoutPublicList()
   @Get('public')
   findAllPublic(
     @Query('includeExercises', new DefaultValuePipe(false), ParseBoolPipe) includeExercises: boolean,
@@ -55,6 +69,7 @@ export class WorkoutController {
     return this.workoutService.findAllPublic(includeExercises);
   }
 
+  @OpenApiWorkoutPublicListForUser()
   @Get('public/users/:userId')
   findAllPublicForUser(
     @Param('userId', ParseUserIdPipe) userId: UserId,
@@ -63,6 +78,7 @@ export class WorkoutController {
     return this.workoutService.findAllPublicForUser(userId, includeExercises);
   }
 
+  @OpenApiWorkoutPublicGetOne()
   @Get('public/:id')
   findOnePublic(@Param('id') id: string) {
     return this.workoutService.findOnePublic(id);
@@ -70,6 +86,7 @@ export class WorkoutController {
 
   @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
+  @OpenApiWorkoutGetOne()
   @Get(':id')
   findOne(@Param('id') id: string, @Req() req: AuthedRequest) {
     return this.workoutService.findOne(req.user.sub, id);
@@ -77,6 +94,7 @@ export class WorkoutController {
 
   @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
+  @OpenApiWorkoutUpdate()
   @Patch(':id')
   update(@Req() req: AuthedRequest, @Param('id') id: string, @Body() updateWorkoutDto: UpdateWorkoutDto) {
     return this.workoutService.update(req.user.sub, id, updateWorkoutDto);
@@ -84,6 +102,7 @@ export class WorkoutController {
 
   @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
+  @OpenApiWorkoutRemove()
   @Delete(':id')
   remove(@Req() req: AuthedRequest, @Param('id') id: string) {
     return this.workoutService.remove(req.user.sub, id);
@@ -91,9 +110,9 @@ export class WorkoutController {
 
   @ApiBearerAuth('JWT')
   @UseGuards(AuthGuard)
+  @OpenApiWorkoutReplaceSteps()
   @Put(':id/steps')
   addSteps(@Req() req: AuthedRequest, @Param('id') id, @Body() workoutStepDto: CreateWorkoutStepDto[]) {
     return this.workoutService.replaceWorkoutSteps(req.user.sub, id, workoutStepDto);
   }
-
 }

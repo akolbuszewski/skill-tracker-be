@@ -1,36 +1,57 @@
-import type { ExerciseResponseDto } from 'src/modules/exercises/dto/exercise-response.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { ExerciseResponseDto } from 'src/modules/exercises/dto/exercise-response.dto';
 
 /** Workout step without nested exercise (list / lightweight responses). */
-export type WorkoutStepSummaryDto = {
-  id: string;
-  exerciseId: string;
-  order: number;
-  plannedDurationSeconds: number | null;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export class WorkoutStepSummaryDto {
+  @ApiProperty({ format: 'uuid' })
+  id!: string;
 
-/** Workout step with full exercise payload (detail / editor responses). */
-export type WorkoutStepResponseDto = WorkoutStepSummaryDto & {
-  exercise: ExerciseResponseDto;
-};
+  @ApiProperty({ format: 'uuid' })
+  exerciseId!: string;
 
-export type WorkoutSummaryDto = {
-  id: string;
-  userId: string;
-  name: string;
-  description: string | null;
-  steps: WorkoutStepSummaryDto[];
-  createdAt: Date;
-  updatedAt: Date;
-};
+  @ApiProperty()
+  order!: number;
 
-export type WorkoutResponseDto = {
-  id: string;
-  userId: string;
-  name: string;
-  description: string | null;
-  steps: WorkoutStepResponseDto[];
-  createdAt: Date;
-  updatedAt: Date;
-};
+  @ApiProperty({ type: Number, nullable: true })
+  plannedDurationSeconds!: number | null;
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  createdAt!: Date;
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  updatedAt!: Date;
+}
+
+export class WorkoutStepResponseDto extends WorkoutStepSummaryDto {
+  @ApiProperty({ type: () => ExerciseResponseDto })
+  exercise!: ExerciseResponseDto;
+}
+
+/** List payload — same class for TypeScript typing and Swagger (no separate schema file). */
+export class WorkoutSummaryDto {
+  @ApiProperty({ format: 'uuid' })
+  id!: string;
+
+  @ApiProperty({ format: 'uuid' })
+  userId!: string;
+
+  @ApiProperty()
+  name!: string;
+
+  @ApiProperty({ type: String, nullable: true })
+  description!: string | null;
+
+  @ApiProperty({ type: [WorkoutStepSummaryDto] })
+  steps!: WorkoutStepSummaryDto[];
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  createdAt!: Date;
+
+  @ApiProperty({ type: String, format: 'date-time' })
+  updatedAt!: Date;
+}
+
+export class WorkoutResponseDto extends WorkoutSummaryDto {
+  @ApiProperty({ type: [WorkoutStepResponseDto] })
+  declare steps: WorkoutStepResponseDto[];
+}

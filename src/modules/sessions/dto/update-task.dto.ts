@@ -1,7 +1,8 @@
+import { TaskStatus } from '@prisma/client';
 import { IsIn, IsInt, IsOptional, IsString, MaxLength, Min, MinLength } from 'class-validator';
 import type { TaskStatusDto } from './session-response.dto';
 
-const TASK_STATUSES: readonly TaskStatusDto[] = ['PENDING', 'IN_PROGRESS', 'DONE', 'SKIPPED'];
+const TASK_STATUSES = Object.values(TaskStatus);
 
 export class UpdateTaskDto {
   @IsOptional()

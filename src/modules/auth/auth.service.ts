@@ -3,12 +3,12 @@ import { JwtService } from '@nestjs/jwt';
 import { Prisma } from '@prisma/client';
 import argon2 from 'argon2';
 import { PrismaService } from 'src/common/database/prisma.service';
-import type { AuthLoginResult, AuthRegisterResult } from './auth.types';
+import type { AuthLoginResponseDto, AuthRegisterResponseDto } from './dto/auth-response.dto';
 
 @Injectable()
 export class AuthService {
     constructor(private readonly prisma: PrismaService, private readonly jwtService: JwtService) {}
-    async register(email: string, password: string): Promise<AuthRegisterResult> {
+    async register(email: string, password: string): Promise<AuthRegisterResponseDto> {
         const passwordHash = await argon2.hash(password)
         try {
         return await this.prisma.user.create({
@@ -32,7 +32,7 @@ export class AuthService {
     }
     }
 
-    async login(userEmail: string, password: string): Promise<AuthLoginResult> {
+    async login(userEmail: string, password: string): Promise<AuthLoginResponseDto> {
         try {
         const user  = await this.prisma.user.findUnique({
             where: {
